@@ -1,0 +1,98 @@
+{
+  "entities": {
+    "School": {
+      "title": "School",
+      "description": "Represents a SESI PE school unit",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "city": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "code": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] }
+      },
+      "required": ["name", "city", "email", "code", "status"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile with RBAC rules",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["admin", "school_admin"] },
+        "schoolId": { "type": "string", "description": "ID of the school this user manages (only for school_admin)" }
+      },
+      "required": ["email", "role"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "Interested student/parent enrollment lead",
+      "type": "object",
+      "properties": {
+        "responsibleName": { "type": "string" },
+        "relationship": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "whatsapp": { "type": "string" },
+        "schoolId": { "type": "string" },
+        "schoolName": { "type": "string" },
+        "course": { "type": "string" },
+        "series": { "type": "string" },
+        "status": { "type": "string", "enum": ["Novo", "Contatado", "Matriculado", "Desistente"] },
+        "observations": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["responsibleName", "relationship", "email", "whatsapp", "schoolId", "course", "series", "status", "createdAt"]
+    },
+    "LeadStatusHistory": {
+      "title": "Lead Status History",
+      "description": "History of status changes for a lead",
+      "type": "object",
+      "properties": {
+        "leadId": { "type": "string" },
+        "oldStatus": { "type": "string" },
+        "newStatus": { "type": "string" },
+        "changedBy": { "type": "string" },
+        "changedByEmail": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "observation": { "type": "string" }
+      },
+      "required": ["leadId", "oldStatus", "newStatus", "changedBy", "timestamp"]
+    },
+    "SystemLog": {
+      "title": "System Log",
+      "description": "Audit logs for administrative actions",
+      "type": "object",
+      "properties": {
+        "action": { "type": "string" },
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "details": { "type": "object" }
+      },
+      "required": ["action", "userId", "timestamp"]
+    }
+  },
+  "firestore": {
+    "schools": {
+      "schema": "School",
+      "description": "Collection of SESI PE schools"
+    },
+    "users": {
+      "schema": "User",
+      "description": "User profiles and roles"
+    },
+    "leads": {
+      "schema": "Lead",
+      "description": "Interests registered by parents"
+    },
+    "leads/{leadId}/history": {
+      "schema": "LeadStatusHistory",
+      "description": "Status history for a specific lead"
+    },
+    "logs": {
+      "schema": "SystemLog",
+      "description": "Administrative audit logs"
+    }
+  }
+}
